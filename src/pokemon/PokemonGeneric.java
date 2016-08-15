@@ -4,8 +4,12 @@ public class PokemonGeneric {
 	private String name;
 	private int id;
 	private Element[] element;
+	private HashMap<Move> moves;
+	
+	//TODO change
 	private Move[] movesNotAllowed;
-	private MoveMap moves;
+	private MoveMap moves2;
+	
 	private String description;
     private String rarity;
     private int rarityInt;
@@ -25,6 +29,79 @@ public class PokemonGeneric {
     
     public void addElement(Element newElement) {
     	element[element.length] = newElement;
+    }
+    
+    public void addLevelMove(Move move, int level) {
+    	moves.put(move, level);
+    }
+    
+    public void addMoveNotAllowed(Move move) {//TODO wtf
+    	if ((movesNotAllowed.length + 1) % 20 != 0) {
+    		movesNotAllowed[movesNotAllowed.length] = move;
+    	}
+    	else {
+    		Move[] temp = movesNotAllowed;
+    		movesNotAllowed = new Move[temp.length + 10];
+    		for (int i = 0; i < temp.length; i++) {
+    			movesNotAllowed[i] = temp[i];
+    		}
+    	}
+    }
+    
+    public void addTMHMMove(Move move, int level) {
+    	for (int i = 0; i < movesNotAllowed.length; i++) {
+    		if (!movesNotAllowed[i].getName().equals(move.getName())) {
+    			moves2.addMove(move, level);
+    		}
+    	}
+    }
+    
+    public String getDescription() {
+    	return description;
+    }
+
+    public int getID() {
+    	return id;
+    }
+    
+    public int getLevel(Move move) {
+    	return moves2.getLevel(move);
+    }
+    
+    public Move getMove(int level) {
+    	return moves2.getMove(level);
+    }
+    
+    public MoveMap getMoves() {
+    	return moves2;
+    }
+    
+    public Move[] getMovesNotAllowed() {
+    	return movesNotAllowed;
+    }
+    
+    public String getName() {
+    	return name;
+    }
+    
+    /**
+     * Returns the string of the pokemon's type.
+     * @return pokeType
+     */
+    public Element[] getType() {
+        return element;
+    }
+
+    /**
+     * Returns the catch rate of the pokemon.
+     * @return catchRate
+     */
+    public String rarity() {
+        return rarity;
+    }
+    
+    public int rarityInt() {
+        return rarityInt;
     }
     
     private void setRarity(int rarityInt) {
@@ -50,79 +127,6 @@ public class PokemonGeneric {
     	}
     }
     
-    public void setAllMoves() {
-    	//param HashMap<Move[], int>
-    }
-    
-    /**
-     * Returns the string of the pokemon's type.
-     * @return pokeType
-     */
-    public Element[] getType() {
-        return element;
-    }
-    
-    public String getName() {
-    	return name;
-    }
-    
-    public int getID() {
-    	return id;
-    }
-    
-    public String getDescription() {
-    	return description;
-    }
-
-    /**
-     * Returns the catch rate of the pokemon.
-     * @return catchRate
-     */
-    public String rarity() {
-        return rarity;
-    }
-    
-    public int rarityInt() {
-        return rarityInt;
-    }
-    
-    public void addMove(Move move, int level) {
-    	for (int i = 0; i < movesNotAllowed.length; i++) {
-    		if (!movesNotAllowed[i].getName().equals(move.getName())) {
-    			moves.addMove(move, level);
-    		}
-    	}
-    }
-    
-    public int getLevel(Move move) {
-    	return moves.getLevel(move);
-    }
-    
-    public Move getMove(int level) {
-    	return moves.getMove(level);
-    }
-    
-    public MoveMap getMoves() {
-    	return moves;
-    }
-    
-    public Move[] getMovesNotAllowed() {
-    	return movesNotAllowed;
-    }
-    
-    public void addMoveNotAllowed(Move move) {
-    	if ((movesNotAllowed.length + 1) % 20 != 0) {
-    		movesNotAllowed[movesNotAllowed.length] = move;
-    	}
-    	else {
-    		Move[] temp = movesNotAllowed;
-    		movesNotAllowed = new Move[temp.length + 10];
-    		for (int i = 0; i < temp.length; i++) {
-    			movesNotAllowed[i] = temp[i];
-    		}
-    	}
-    }
-    
     public String toString() {
     	StringBuilder builder = new StringBuilder();
     	builder.append(id);
@@ -142,7 +146,7 @@ public class PokemonGeneric {
     	return builder.toString();
     }
     
-    private class MoveMap {
+    private class MoveMap { //TODO replace with HashMap
     	private Move[] moves;
     	private int[] levels;
     	
@@ -157,6 +161,20 @@ public class PokemonGeneric {
     		}
     		moves[moves.length] = move;
     		levels[levels.length] = level;
+    	}
+    	
+    	private void expandArray() {
+    		Move[] tempMove = moves;
+    		moves = new Move[tempMove.length + 10];
+    		for (int i = 0; i < tempMove.length; i++) {
+    			moves[i] = tempMove[i];
+    		}
+    		
+    		int[] tempLevel = levels;
+    		levels = new int[tempLevel.length + 10];
+    		for (int i = 0; i < tempLevel.length; i++) {
+    			levels[i] = tempLevel[i];
+    		}
     	}
     	
     	private int getLevel(Move move) {
@@ -175,20 +193,6 @@ public class PokemonGeneric {
     			}
     		}
     		return null;
-    	}
-    	
-    	private void expandArray() {
-    		Move[] tempMove = moves;
-    		moves = new Move[tempMove.length + 10];
-    		for (int i = 0; i < tempMove.length; i++) {
-    			moves[i] = tempMove[i];
-    		}
-    		
-    		int[] tempLevel = levels;
-    		levels = new int[tempLevel.length + 10];
-    		for (int i = 0; i < tempLevel.length; i++) {
-    			levels[i] = tempLevel[i];
-    		}
     	}
     }
 }

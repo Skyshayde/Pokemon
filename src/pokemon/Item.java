@@ -16,39 +16,39 @@ public class Item {
 		this.description = description;
 	}
 	
-	public String getName() {
-		return name;
+	public String getDescription() {
+		return description;
 	}
 	
 	public ItemType getItemType() {
 		return type;
 	}
 	
-	public void setPrice(int price) {
-		this.price = price;
+	public Place getLocation() {
+		return location;
+	}
+	
+	public String getName() {
+		return name;
 	}
 	
 	public int getPrice() {
 		return price;
 	}
 	
-	public void setSell(int sell) {
-		this.sell = sell;
-	}
-	
 	public int getSell() {
 		return sell;
-	}
-	
-	public String getDescription() {
-		return description;
 	}
 	
 	public void setLocation(Place location) {
 		this.location = location;
 	}
 	
-	public Place getLocation() {
-		return location;
+	public void setPrice(int price) {
+		this.price = price;
+	}
+	
+	public void setSell(int sell) {
+		this.sell = sell;
 	}
 }

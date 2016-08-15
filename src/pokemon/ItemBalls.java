@@ -1,7 +1,6 @@
 package pokemon;
 
 public class ItemBalls extends Item {
-
 	private boolean pokeBall;
 	private boolean greatBall;
 	private boolean ultraBall;
@@ -11,20 +10,34 @@ public class ItemBalls extends Item {
 	private boolean timerBall;
 	private boolean safariBall;
 	private int catchRate;
-	private Image image;
+	private ImageFile image;
 	
 	public ItemBalls(String name, int price, int sell, String description, int ballType) {
 		super(name, ItemType.BALL, price, sell, description);
 		setBall(ballType);
 	}
 	
-	public void use(Pokemon pokemon) {
-		//TODO
-		if (healBall) {
-			pokemon.setHealth(pokemon.getMaxHP());
-		}
-		pokemon.setBall(this);
-		Player.removeItem(this);
+	public void catchRate(int rate) {
+		catchRate = rate;
+	}
+
+	public int getCatchRate() {
+		return catchRate;
+	}
+	
+	public ImageFile getImage() {
+		return image;
+	}
+	
+	private void refreshBallType() {
+		pokeBall = false;
+		greatBall = false;
+		ultraBall = false;
+		masterBall = false;
+		healBall = false;
+		repeatBall = false;
+		timerBall = false;
+		safariBall = false;
 	}
 	
 	public void setBall(int ballType) {
@@ -49,10 +62,9 @@ public class ItemBalls extends Item {
 			case 4:
 				repeatBall = true;
 				catchRate = 255;
-				//TODO
-				/*if (Player.hasPokemon(pokemon)) {
-				catchRate = 80;
-				}*/
+				if (Player.hasPokemon(EventBattle.getOpponent())) {
+					catchRate = 80;
+				}
 				break;
 			case 5:
 				timerBall = true;
@@ -72,14 +84,6 @@ public class ItemBalls extends Item {
 				catchRate = 255;
 				break;
 		}
-	}
-	
-	public void catchRate(int rate) {
-		catchRate = rate;
-	}
-
-	public int getCatchRate() {
-		return catchRate;
 	}
 	
 	public void setImage(String location) {
@@ -110,19 +114,13 @@ public class ItemBalls extends Item {
 		}
 	}
 	
-	public Image getImage() {
-		return image;
-	}
-	
-	private void refreshBallType() {
-		pokeBall = false;
-		greatBall = false;
-		ultraBall = false;
-		masterBall = false;
-		healBall = false;
-		repeatBall = false;
-		timerBall = false;
-		safariBall = false;
+	public void use(Pokemon pokemon) {
+		//TODO
+		if (healBall) {
+			pokemon.setHealth(pokemon.getMaxHP());
+		}
+		pokemon.setBall(this);
+		Player.removeItem(this);
 	}
 
 }

@@ -1,6 +1,7 @@
 package pokemon;
 
-public class Move {
+public class Move { //TODO have Move Generic class and extend to Move for individual pokemon to use.
+	private int numCode;
 	private String name;
 	private Element[] elements;
 	private String category;
@@ -19,8 +20,9 @@ public class Move {
 	private EV effortValue;
 	private String description;
 	
-	public Move(String name, Element element, String category, int maxPP, 
+	public Move(int numCode, String name, Element element, String category, int maxPP, 
 			int power, int accuracy, int criticalRatio, int priority, String description) {
+		this.numCode = numCode;
 		this.name = name;
 		elements = new Element[17];
 		elements[0] = element;
@@ -32,56 +34,11 @@ public class Move {
 		this.priority = priority;
 		this.description = description;
 		eventChange = false;
+		pp = maxPP;
 	}
 	
-	public void use() {
-		changeEV();
-		giveItem();
-		giveMoney();
-		if (eventChange) {
-			changeEvent();
-		}
-	}
-	
-	public void setItemToGive(Item item) {
-		this.item = item;
-	}
-	
-	public void giveItem() {
-		if (item != null) {
-			Player.addItem(item);
-		}
-	}
-	
-	public void setGiveMoney(int money, boolean toPlayer) {
-		moneyToGive = money;
-		giveMoneyToPlayer = toPlayer;
-	}
-	
-	public void giveMoney() {
-		if (giveMoneyToPlayer) {
-			Player.addMoney(moneyToGive);
-		}
-		else if (EventBattle.isActive()){
-			EventBattle.getTrainer().addMoney(moneyToGive);
-		}
-	}
-	
-	public void setIfEventChange(boolean change) {
-		eventChange = change;
-	}
-	
-	public void changeEvent() { //Event event) {  Always battle?
-		// TODO Auto-generated method stub
-		if (EventBattle.isActive()){
-			EventBattle.end();
-		}
-	}
-	
-	public void setChangeEV(EV effortValue, int amount, boolean positive) {
-		this.effortValue = effortValue;
-		this.effortValueAmount = amount;
-		this.effortValueChangePositive = positive;
+	public void addElement(Element element) {
+		elements[elements.length] = element;
 	}
 	
 	public void changeEV() {
@@ -93,8 +50,70 @@ public class Move {
 		}
 	}
 	
-	public void addElement(Element element) {
-		elements[elements.length] = element;
+	public void changeEvent() { //Event event) {  Always battle?
+		// TODO Auto-generated method stub
+		if (EventBattle.isActive()){
+			EventBattle.end();
+		}
+	}
+	
+	public int getAccuracy() {
+		return accuracy;
+	}
+	
+	public String getCategory() {
+		return category;
+	}
+	
+	public int getCriticalRatio() {
+		return criticalRatio;
+	}
+	
+	public String getDescription() {
+		return description;
+	}
+	
+	public Element[] getElements() {
+		return elements;
+	}
+	
+	public int getMaxPP() {
+		return maxPP;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public int getNumCode() {
+		return numCode;
+	}
+	
+	public int getPower() {
+		return power;
+	}
+	
+	public int getPP() {
+		return pp;
+	}
+	
+	public int getPriority() {
+		return priority;
+	}
+	
+	public void giveItem() {
+		if (item != null) {
+			Player.addItem(item);
+		}
+	}
+	
+	public void giveMoney() {
+		if (giveMoneyToPlayer) {
+			Player.addMoney(moneyToGive);
+		}
+		else if (EventBattle.isActive()){
+			EventBattle.getTrainer().addMoney(moneyToGive);
+		}
 	}
 	
 	public void reducePP() {
@@ -104,48 +123,42 @@ public class Move {
 	public void reducePP(int reduction) {
 		pp -= reduction;
 	}
+
+	public void refreshPP() {
+		pp = maxPP;
+	}
+	
+	public void setChangeEV(EV effortValue, int amount, boolean positive) {
+		this.effortValue = effortValue;
+		this.effortValueAmount = amount;
+		this.effortValueChangePositive = positive;
+	}
 	
 	public void setCriticalRatio(int criticalRatio) {
 		this.criticalRatio = criticalRatio;
 	}
 	
-	public String getName() {
-		return name;
+	public void setGiveMoney(int money, boolean toPlayer) {
+		moneyToGive = money;
+		giveMoneyToPlayer = toPlayer;
 	}
 	
-	public Element[] getElements() {
-		return elements;
+	public void setIfEventChange(boolean change) {
+		eventChange = change;
 	}
 	
-	public String getCategory() {
-		return category;
+	public void setItemToGive(Item item) {
+		this.item = item;
 	}
 	
-	public int getMaxPP() {
-		return maxPP;
+	public void use() {
+		changeEV();
+		giveItem();
+		giveMoney();
+		if (eventChange) {
+			changeEvent();
+		}
+		reducePP();
 	}
 	
-	public int getPP() {
-		return pp;
-	}
-	
-	public int getPower() {
-		return power;
-	}
-	
-	public int getAccuracy() {
-		return accuracy;
-	}
-	
-	public int getCriticalRatio() {
-		return criticalRatio;
-	}
-	
-	public int getPriority() {
-		return priority;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
 }

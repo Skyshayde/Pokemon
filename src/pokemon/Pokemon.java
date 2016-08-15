@@ -11,6 +11,7 @@ public class Pokemon extends PokemonGeneric {
     private int level;
     private int xp;
     private Move[] moveSet;
+    private int numOfMoves; //TODO make it easier to change and add moves
     private int friendAmount;
     private boolean restrict;
     private double catchRate;
@@ -229,6 +230,13 @@ public class Pokemon extends PokemonGeneric {
     public Move[] getMoveset() {
         return moveSet;
     }
+    
+    public boolean hasMove(Move move) {
+    	for (int i = 0; i < moveSet.length; i++) {
+    		if (move.getNumCode() == moveSet[i].getNumCode()) return true;
+    	}
+    	return false;
+    }
 
 
     //------------------------------------------------------------------
@@ -440,8 +448,21 @@ public class Pokemon extends PokemonGeneric {
 		
 	}
 
-	public void trainMove(Move move) {
+	public boolean trainMove(Move move) {
 		// TODO Auto-generated method stub
+		if (hasMove(move)){ //check if pokemon can learn move
+			
+		}
 		
+		return false;
+	}
+
+	public void heal() {
+		// TODO Auto-generated method stub
+		health = maxHP;
+		status = Status.NONE;
+		for (int i = 0; i < numOfMoves; i++) {
+			moveSet[i].refreshPP();
+		}
 	}
 }

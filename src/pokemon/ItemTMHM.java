@@ -3,7 +3,7 @@ package pokemon;
 public class ItemTMHM extends Item {
 	private ItemType type;
 	private Move move;
-	private Image image;
+	private ImageFile image;
 	
 	public ItemTMHM(String name, Move move, ItemType type, int price, int sell, String description) {
 		super(name, type, price, sell, move.getDescription());
@@ -11,19 +11,22 @@ public class ItemTMHM extends Item {
 		this.type = type;
 	}
 	
-	public void use(Pokemon pokemon) {
-		pokemon.trainMove(move);
-		if (type == ItemType.TM) {
-			Player.removeItem(this);
-		}
+	public ImageFile getImage() {
+		return image;
 	}
 	
-	public void setImage(Image image) {
+	public void setImage(ImageFile image) {
 		//TODO
 	}
 	
-	public Image getImage() {
-		return image;
+	public boolean use(Pokemon pokemon) {
+		boolean isSet = pokemon.trainMove(move);
+		if (isSet) {
+			if (type == ItemType.TM) {
+				Player.removeItem(this);
+			}			
+		}
+		return isSet;
 	}
 	
 }

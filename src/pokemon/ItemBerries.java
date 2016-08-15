@@ -9,12 +9,92 @@ public class ItemBerries extends Item {
 	private int hp;
 	private int percent;
 	private int change;
-	private Image image;
+	private ImageFile image;
 
 	public ItemBerries(String name, String description) {
 		super(name, ItemType.BERRY, 0, 0, description); //TODO price and sell???
 		effect = new boolean[10];
 		resetEffect();
+	}
+	
+	public void activateInBattle() {
+		//TODO
+	}
+	
+	public ImageFile getImage() {
+		return image;
+	}
+	
+	private void resetEffect() {
+		for (int i = 0; i < effect.length; i++) {
+			effect[i] = false;
+		}
+	}
+	
+	public void setChangesCriticalRatio(int percent, int change) {
+		resetEffect();
+		effect[9] = true;
+		this.percent = percent;
+		this.change = change;
+	}
+	
+	public void setChangeEV(EV effortValue, int change) {
+		resetEffect();
+		effect[6] = true;
+		this.effortValue = effortValue;
+		this.change = change;
+	}
+	
+	public void setChangeEVbyHP(EV effortValue, int percent, int change) {
+		resetEffect();
+		effect[7] = true;
+		this.effortValue = effortValue;
+		this.percent = percent;
+		this.change = change;
+	}
+	
+	public void setCuresAllCondition() {
+		resetEffect();
+		effect[5] = true;
+	}
+	
+	public void setCuresCondition(Condition condition) {
+		resetEffect();
+		effect[4] = true;
+		this.condition = condition;
+	}
+	
+	public void setCuresAllStatus() {
+		resetEffect();
+		effect[1] = true;
+	}
+	
+	public void setCuresStatus(Status status) {
+		resetEffect();
+		effect[0] = true;
+		this.status = status;
+	}
+	
+	public void setDecreaseSupereffectiveDamage(Element element) {
+		resetEffect();
+		effect[8] = true;
+		this.element = element;
+	}
+	
+	public void setImage(String location) {
+		//TODO
+	}
+	
+	public void setRestoresHP(int hp) {
+		resetEffect();
+		effect[2] = true;
+		this.hp = hp;
+	}
+	
+	public void setRestoresHPbyPercent(int percent) {
+		resetEffect();
+		effect[3] = true;
+		this.percent = percent;
 	}
 	
 	public void use(Pokemon pokemon) {
@@ -54,83 +134,4 @@ public class ItemBerries extends Item {
 		Player.removeItem(this);
 	}
 	
-	public void setCuresStatus(Status status) {
-		resetEffect();
-		effect[0] = true;
-		this.status = status;
-	}
-	
-	public void setCuresAllStatus() {
-		resetEffect();
-		effect[1] = true;
-	}
-	
-	public void setRestoresHP(int hp) {
-		resetEffect();
-		effect[2] = true;
-		this.hp = hp;
-	}
-	
-	public void setRestoresHPbyPercent(int percent) {
-		resetEffect();
-		effect[3] = true;
-		this.percent = percent;
-	}
-	
-	public void setCuresCondition(Condition condition) {
-		resetEffect();
-		effect[4] = true;
-		this.condition = condition;
-	}
-	
-	public void setCuresAllCondition() {
-		resetEffect();
-		effect[5] = true;
-	}
-	
-	public void setChangeEV(EV effortValue, int change) {
-		resetEffect();
-		effect[6] = true;
-		this.effortValue = effortValue;
-		this.change = change;
-	}
-	
-	public void setChangeEVbyHP(EV effortValue, int percent, int change) {
-		resetEffect();
-		effect[7] = true;
-		this.effortValue = effortValue;
-		this.percent = percent;
-		this.change = change;
-	}
-	
-	public void setDecreaseSupereffectiveDamage(Element element) {
-		resetEffect();
-		effect[8] = true;
-		this.element = element;
-	}
-	
-	public void setChangesCriticalRatio(int percent, int change) {
-		resetEffect();
-		effect[9] = true;
-		this.percent = percent;
-		this.change = change;
-	}
-	
-	private void resetEffect() {
-		for (int i = 0; i < effect.length; i++) {
-			effect[i] = false;
-		}
-	}
-	
-	public void activateInBattle() {
-		//TODO
-	}
-	
-	public void setImage(String location) {
-		//TODO
-	}
-	
-	public Image getImage() {
-		return image;
-	}
 }

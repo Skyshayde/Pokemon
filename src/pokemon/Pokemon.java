@@ -38,197 +38,105 @@ public class Pokemon extends PokemonGeneric {
         supereffectiveImmune = false;
     }
     
-    public void setNickName(String name) {
-    	nickName = name;
-    }
-    
-    public String getNickName() {
-    	return nickName;
-    }
-
-    /**
-     * Sets the current health of the pokemon.
-     * @param hp as the current health.
-     */
-    public void setHealth(int hp) {
-        health = hp;
-    }
-
-    /**
-     * Returns the current health of the pokemon.
-     * @return health
-     */
-    public int getHealth() { 
-    	return health;
-    }
-    
     public void addHealth(int hp) {
     	health += hp;
     	if (health > maxHP) {
     		health = maxHP;
     	}
     }
-    
-    public void removeHealth(int hp) {
-    	health -= hp;
-    	if (health < 0) health = 0;
-    	if (health == 0) fainted = true;
+	
+	public void changeEV(EV effortValue, int amount) {
+		switch (effortValue) {
+			case HP:
+				effortValues[0] += amount;
+				break;
+			case ATTACK:
+				effortValues[1] += amount;
+				break;
+			case DEFENSE:
+				effortValues[2] += amount;
+				break;
+			case SPEED:
+				effortValues[3] += amount;
+				break;
+			case SP_ATK:
+				effortValues[4] += amount;
+				break;
+			case SP_DEF:
+				effortValues[5] += amount;
+				break;
+		}
+	}
+
+    public void checkLocation() { //TODO
+        //get map coordinates and set random ints for level.
+
+        Random lv = new Random();
+        level = lv.nextInt(2);
+        level = level + 3;
     }
+	
+	public Pokemon clone() {
+		Pokemon clone = new Pokemon(getName(), getType()[0], experienceRate, 
+				rarityInt(), getDescription(), getID(), wild);
+		for (int i = 1; i < getType().length; i++) {
+			clone.addElement(getType()[i]);
+		}
+		return clone;
+	}
 
-    /**
-     * Sets the max HP of the pokemon.
-     * @param max as the pokemon's max HP.
-     */
-    public void maxHP(int max) { maxHP = max; }
+	public void criticalRatioIncrease(int change) {
+		// TODO Auto-generated method stub
+	}
 
-    /**
-     * Returns the pokemon's max HP.
-     * @return maxHP
-     */
-    public int getMaxHP() { return maxHP; }
-
-    /**
-     * Sets the level of the pokemon.
-     * @param lv as the current pokemon level.
-     */
-    public void setLevel(int lv) {
-        level = lv;
-    }
-
-    /**
-     * Returns the level of the current pokemon.
-     * @return level
-     */
-    public int getLevel() { return level; }
-
-    /**
-     * The pokemon goes up a level if it reached the right xp.
-     */
-    public void levelUp() {
-        if (xp == neededXP && level < 100) {
-            level++;
-            xp = 0;
-        }
-    }
-
-    /**
-     * Sets the xp for the pokemon.
-     * @param experience as the pokemon's xp.
-     */
-    public void setXP(int experience) {
-        xp += experience;
-    }
-
-    /**
-     * Returns the xp of the pokemon.
-     * @return xp
-     */
-    public int getXP() {
-        return xp;
-    }
-
-    /**
-     * Sets the current status of the pokemon.
-     * @param stat as the pokemon's status.
-     */
-    public void setStatus(Status stat) {
-    	status = stat;
-    	switch (stat) {
-	    	case POISONED:
-	    		/*if (TrainerBattle.battleStat()) {
-	            health--;
-	        	}*/
-	    		break;
-	    	case PARALYZED:
-	    		/*if (TrainerBattle.battleStat()) {
-	            restrict = true;
-	        	}*/
-	    		break;
-	    	case SLEEP:
-	    		/*if (TrainerBattle.battleStat()) {
-	            int rand = random.nextInt(2);
-	            restrict = true;
-	        	}*/
-	    		break;
-	    	case BURNED:
-	    		/*if (TrainerBattle.battleStat()){
-	            health--;
-	        	}*/
-	    		break;
-	    	case FROZEN:
-	    		/*if (TrainerBattle.battleStat()){
-	            int rand = random.nextInt(2);
-	            restrict = true;
-	        	}*/
-	    		break;
-	    	default:
-	    		status = Status.NONE;
-	    		restrict = false;
-    	}
-    }
-
-    /**
-     * Returns the string for the current status of the pokemon.
-     * @return status
-     */
-    public Status getStatus() {
-        return status;
-    }
-
-    /**
-     * Sets the friendship for the friendship scale.
-     * @param friend as the amount on the friendship scale.
-     */
-    public void setFriendship(int friend) {
-        friendAmount = friend;
-    }
-
-    /**
-     * Returns the friendship level.
-     * @return friendAmount
-     */
-    public int getFriendship() {
-        return friendAmount;
-    }
-
-    /**
-     * Sets the hold item of the pokemon.
-     * @param item as the held item.
-     */
-    public void setHold(Item item) {
-        hold = item;
-    }
-
-    /**
-     * Returns the hold item of the pokemon.
-     * @return hold
-     */
-    public Item getHold() {
-        return hold;
-    }
-    
-    public void setBall(ItemBalls ball) {
-    	this.ball = ball;
+    public float getAttack(float attack) {
+        //attack = Move.damage();
+        return attack;
     }
     
     public ItemBalls getBall() {
     	return ball;
     }
 
-    /**
-     * Sets the pokemon's current moves.
-     * @param list as the current moves.
-     */
-    public void setMoveset(Move[] list) {
-        moveSet = list;
+    public double getCatchRate() {
+        return catchRate;
     }
 
-    /**
-     * Returns the pokemon's current moves.
-     * @return moves
-     */
+	public Condition getCondition() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+    public int getFriendship() {
+        return friendAmount;
+    }
+
+    public int getHealth() { 
+    	return health;
+    }
+
+    public Item getHold() {
+        return hold;
+    }
+
+    public int getLevel() { return level; }
+
+    public int getMaxHP() { return maxHP; }
+
     public Move[] getMoveset() {
         return moveSet;
+    }
+    
+    public String getNickName() {
+    	return nickName;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+    
+    public int getXP() {
+        return xp;
     }
     
     public boolean hasMove(Move move) {
@@ -238,33 +146,38 @@ public class Pokemon extends PokemonGeneric {
     	return false;
     }
 
+	public void heal() {
+		// TODO Auto-generated method stub
+		health = maxHP;
+		status = Status.NONE;
+		for (int i = 0; i < numOfMoves; i++) {
+			moveSet[i].refreshPP();
+		}
+	}
+    
+    public boolean isFainted() { return fainted; }
 
-    //------------------------------------------------------------------
+    public boolean isRestricted() { return restrict; }
+    
+    public boolean isSupereffectiveImmune() { return supereffectiveImmune; }
 
-    /**
-     * If pokemon is wild or not.
-     * @return wild
-     */
-    public boolean wild() { 
-    	return wild;
+    public void levelUp() {
+        if (xp == neededXP && level < 100) {
+            level++;
+            xp = 0;
+        }
     }
 
-    /**
-     * Checks where the trainer is.
-     */
-    public void checkLocation() {
-        //get map coordinates and set random ints for level.
-
-        Random lv = new Random();
-        level = lv.nextInt(2);
-        level = level + 3;
+    public void maxHP(int max) { maxHP = max; }
+    
+    public void removeHealth(int hp) {
+    	health -= hp;
+    	if (health < 0) health = 0;
+    	if (health == 0) fainted = true;
     }
+    
+    public void setBall(ItemBalls ball) { this.ball = ball; }
 
-    /**
-     * Sets the catch rate of the pokemon.
-     * Formula from http://bulbapedia.bulbagarden.net/wiki/Catch_rate.
-     * @param rate as the pokemon's rate.
-     */
     public void setCatchRate(ItemBalls ball, int rate) {
         int ballRate = ball.getCatchRate();
         double statusBonus = 1;
@@ -280,20 +193,19 @@ public class Pokemon extends PokemonGeneric {
         catchRate = ((3 * maxHP - 2 * health) * rate * ballRate * statusBonus) / (3 * maxHP);
     }
 
-    /**
-     * Returns the catch rate of the pokemon.
-     * @return catchRate
-     */
-    public double getCatchRate() {
-        return catchRate;
-    }
+	public void setCondition(Condition none) {
+		// TODO Auto-generated method stub
+	}
 
-    /**
-     * Sets which experience function the pokemon follows.
-     * Rate options: erratic, fast, medium fast, medium slow, slow, and fluctuating.
-     * All formulas from http://bulbapedia.bulbagarden.net/wiki/Experience.
-     * @param rate as the rate the pokemon's experience raises.
-     */
+	public void setEV(int hp, int atk, int def, int spd, int spatk, int spdef) {
+		effortValues[0] = hp;
+		effortValues[1] = atk;
+		effortValues[2] = def;
+		effortValues[3] = spd;
+		effortValues[4] = spatk;
+		effortValues[5] = spdef;
+	}
+
     public void setExperienceRate(ExperienceRate rate) {
     	experienceRate = rate;
     	switch (rate) {
@@ -343,41 +255,17 @@ public class Pokemon extends PokemonGeneric {
         }
     }
 
-    /**
-     * Returns the pokemon's attack.
-     * @param attack as the power of the attack.
-     * @return attack
-     */
-    public float getAttack(float attack) {
-        //attack = Move.damage();
-        return attack;
-    }
+    public void setFriendship(int friend) { friendAmount = friend; }
 
-    /**
-     * If the pokemon is restricted by status the return true.
-     * @return restrict
-     */
-    public boolean isRestricted() {
-        return restrict;
-    }
-	
-	public Pokemon clone() {
-		Pokemon clone = new Pokemon(getName(), getType()[0], experienceRate, 
-				rarityInt(), getDescription(), getID(), wild);
-		for (int i = 1; i < getType().length; i++) {
-			clone.addElement(getType()[i]);
-		}
-		return clone;
-	}
+    public void setHealth(int hp) { health = hp; }
 
-	public void setEV(int hp, int atk, int def, int spd, int spatk, int spdef) {
-		effortValues[0] = hp;
-		effortValues[1] = atk;
-		effortValues[2] = def;
-		effortValues[3] = spd;
-		effortValues[4] = spatk;
-		effortValues[5] = spdef;
-	}
+    public void setHold(Item item) { hold = item; }
+
+    public void setLevel(int lv) { level = lv; }
+
+    public void setMoveset(Move[] list) { moveSet = list; }
+    
+    public void setNickName(String name) { nickName = name; }
 	
 	public void setOneEV(EV effortValue, int amount) {
 		switch (effortValue) {
@@ -401,52 +289,50 @@ public class Pokemon extends PokemonGeneric {
 				break;
 		}
 	}
+
+    public void setStatus(Status stat) { //TODO
+    	status = stat;
+    	switch (stat) {
+	    	case POISONED:
+	    		/*if (TrainerBattle.battleStat()) {
+	            health--;
+	        	}*/
+	    		break;
+	    	case PARALYZED:
+	    		/*if (TrainerBattle.battleStat()) {
+	            restrict = true;
+	        	}*/
+	    		break;
+	    	case SLEEP:
+	    		/*if (TrainerBattle.battleStat()) {
+	            int rand = random.nextInt(2);
+	            restrict = true;
+	        	}*/
+	    		break;
+	    	case BURNED:
+	    		/*if (TrainerBattle.battleStat()){
+	            health--;
+	        	}*/
+	    		break;
+	    	case FROZEN:
+	    		/*if (TrainerBattle.battleStat()){
+	            int rand = random.nextInt(2);
+	            restrict = true;
+	        	}*/
+	    		break;
+	    	default:
+	    		status = Status.NONE;
+	    		restrict = false;
+    	}
+    }
 	
-	public void changeEV(EV effortValue, int amount) {
-		switch (effortValue) {
-			case HP:
-				effortValues[0] += amount;
-				break;
-			case ATTACK:
-				effortValues[1] += amount;
-				break;
-			case DEFENSE:
-				effortValues[2] += amount;
-				break;
-			case SPEED:
-				effortValues[3] += amount;
-				break;
-			case SP_ATK:
-				effortValues[4] += amount;
-				break;
-			case SP_DEF:
-				effortValues[5] += amount;
-				break;
-		}
+	public void setSupereffectiveImmunity(boolean immune) {
+		supereffectiveImmune = immune;
 	}
 
-	public Condition getCondition() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public void setCondition(Condition none) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public void setSupereffectiveImmunityFalse() {
-		supereffectiveImmune = false;
-	}
-	
-	public void setSupereffectiveImmunityTrue() {
-		supereffectiveImmune = true;
-	}
-
-	public void criticalRatioIncrease(int change) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void setXP(int experience) {
+        xp += experience;
+    }
 
 	public boolean trainMove(Move move) {
 		// TODO Auto-generated method stub
@@ -457,12 +343,8 @@ public class Pokemon extends PokemonGeneric {
 		return false;
 	}
 
-	public void heal() {
-		// TODO Auto-generated method stub
-		health = maxHP;
-		status = Status.NONE;
-		for (int i = 0; i < numOfMoves; i++) {
-			moveSet[i].refreshPP();
-		}
-	}
+    public boolean wild() { 
+    	return wild;
+    }
+    
 }

@@ -122,7 +122,7 @@ public class ItemBerries extends Item {
 		else if (effect[8] && EventBattle.isActive()) {
 			for (int i = 0; i < EventBattle.getOpponent().getType().length; i++) {
 				if (EventBattle.getOpponent().getType()[i] == element) {
-					pokemon.setSupereffectiveImmunityTrue();
+					pokemon.setSupereffectiveImmunity(true);
 				}
 			}
 			//TODO end after Battle Event

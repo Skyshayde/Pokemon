@@ -1,18 +1,18 @@
 package pokemon;
 
 public class Bag {
-	private HashMap<ItemMain> mainItems;
-	private HashMap<ItemBalls> balls;
-	private HashMap<ItemBerries> berries;
-	private HashMap<ItemTMHM> tmhm;
-	private HashMap<ItemKey> keyItems;
+	private PokeHashMap<ItemMain> mainItems;
+	private PokeHashMap<ItemBalls> balls;
+	private PokeHashMap<ItemBerries> berries;
+	private PokeHashMap<ItemTMHM> tmhm;
+	private PokeHashMap<ItemKey> keyItems;
 
 	public Bag() {
-		mainItems = new HashMap<ItemMain>(ItemMain.class);
-		balls = new HashMap<ItemBalls>(ItemBalls.class);
-		berries = new HashMap<ItemBerries>(ItemBerries.class);
-		tmhm = new HashMap<ItemTMHM>(ItemTMHM.class);
-		keyItems = new HashMap<ItemKey>(ItemKey.class);
+		mainItems = new PokeHashMap<ItemMain>(ItemMain.class);
+		balls = new PokeHashMap<ItemBalls>(ItemBalls.class);
+		berries = new PokeHashMap<ItemBerries>(ItemBerries.class);
+		tmhm = new PokeHashMap<ItemTMHM>(ItemTMHM.class);
+		keyItems = new PokeHashMap<ItemKey>(ItemKey.class);
 	}
 	
 	public void add(Item item) {

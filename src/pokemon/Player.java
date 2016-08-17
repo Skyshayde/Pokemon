@@ -1,5 +1,7 @@
 package pokemon;
 
+import javax.swing.Icon;
+
 public class Player {
 	private static int id;
 	private static String firstName;
@@ -10,7 +12,7 @@ public class Player {
 	private static Pokemon[] pokemonSeen;
 	private static Pokemon[] pokemonParty;
 	private static int partySize;
-	private static HashMap<String> questAchievements;
+	private static PokeHashMap<String> questAchievements;
 	private static Person[] peopleFriends;
 	private static Person[] peopleAcquaintances;
 	private static Person[] peopleFamily;
@@ -18,6 +20,21 @@ public class Player {
 	
 	private static Bag bag;
 	private static PC pc;
+	
+	private static int posX, posY;
+	
+	public static ImageFile imageUP;
+	public static ImageFile imageUP_L;
+	public static ImageFile imageUP_R;
+	public static ImageFile imageRIGHT;
+	public static ImageFile imageRIGHT_L;
+	public static ImageFile imageRIGHT_R;
+	public static ImageFile imageDOWN;
+	public static ImageFile imageDOWN_L;
+	public static ImageFile imageDOWN_R;
+	public static ImageFile imageLEFT;
+	public static ImageFile imageLEFT_L;
+	public static ImageFile imageLEFT_R;
 
 	public Player() {
 		id = 0;
@@ -26,11 +43,11 @@ public class Player {
 		money = 0;
 		badges = 0;
 		
-		pokemonCaught = new Pokemon[Pokedex.getPokemon().length];
+		/*pokemonCaught = new Pokemon[Pokedex.getPokemon().length];
 		pokemonSeen = new Pokemon[Pokedex.getPokemon().length];
 		pokemonParty = new Pokemon[6];
 		
-		questAchievements = new HashMap<String>(String.class);
+		questAchievements = new PokeHashMap<String>(String.class);
 		
 		peopleFriends = new Person[People.getPeople().length];
 		peopleAcquaintances = new Person[People.getPeople().length];
@@ -38,7 +55,9 @@ public class Player {
 		placesVisited = new boolean[Places.getPlaces().length];
 		
 		bag = new Bag();
-		pc = new PC();
+		pc = new PC();*/
+		
+		setImages();
 	}
 	
 	public static void addItem(Item item) {
@@ -81,6 +100,10 @@ public class Player {
 	public String getTimeString() {
 		return "";//TODO
 	}
+	
+	public static int getX() { return posX; }
+	
+	public static int getY() { return posY; }
 
 	public static boolean hasPokemon(Pokemon pokemon) {
 		for (int i = 0; i < pokemonCaught.length; i++) {
@@ -104,6 +127,26 @@ public class Player {
 			if (pokemonSeen[i].getName().equals(pokemon.getName())) return true;
 		}
 		return false;
+	}
+	
+	private void setImages() {
+		imageUP = new ImageFile(getClass().getResource("/sprites/player back.png"), 10);
+		imageUP_L = new ImageFile(getClass().getResource("/sprites/player back step left.png"), 10);
+		imageUP_R = new ImageFile(getClass().getResource("/sprites/player back step right.png"), 10);
+		imageRIGHT = new ImageFile(getClass().getResource("/sprites/player right.png"), 10);
+		imageRIGHT_L = new ImageFile(getClass().getResource("/sprites/player right step left.png"), 10);
+		imageRIGHT_R = new ImageFile(getClass().getResource("/sprites/player right step right.png"), 10);
+		imageDOWN = new ImageFile(getClass().getResource("/sprites/player front.png"), 10);
+		imageDOWN_L = new ImageFile(getClass().getResource("/sprites/player front step left.png"), 10);
+		imageDOWN_R = new ImageFile(getClass().getResource("/sprites/player front step right.png"), 10);
+		imageLEFT = new ImageFile(getClass().getResource("/sprites/player left.png"), 10);
+		imageLEFT_L = new ImageFile(getClass().getResource("/sprites/player left step left.png"), 10);
+		imageLEFT_R = new ImageFile(getClass().getResource("/sprites/player left step right.png"), 10);
+	}
+	
+	public static void setPosition(int x, int y) {
+		posX = x;
+		posY = y;
 	}
 	
 	public Pokemon swapInParty(Pokemon pokemon, int pos) { 

@@ -4,7 +4,7 @@ public class PokemonGeneric {
 	private String name;
 	private int id;
 	private Element[] element;
-	private HashMap<Move> moves;
+	private PokeHashMap<Move> moves;
 	
 	//TODO change
 	private Move[] movesNotAllowed;

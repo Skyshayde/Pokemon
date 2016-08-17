@@ -3,12 +3,12 @@ package pokemon;
 public class PC {
 	private Pokemon[][] boxes;
 	private Bag itemStorage;
-	private HashMap<String> mail;
+	private PokeHashMap<String> mail;
 
 	public PC() {
 		boxes = new Pokemon[12][30];
 		itemStorage = new Bag();
-		mail = new HashMap<String>(String.class);
+		mail = new PokeHashMap<String>(String.class);
 	}
 	
 	public void addItem(Item item) {

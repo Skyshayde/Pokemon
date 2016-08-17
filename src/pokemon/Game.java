@@ -156,69 +156,71 @@ public class Game {
 		isMoving = true;
 		Timer moveTimer = new Timer();
 		
-		int i = 0, j = 0;
-		if (keys[KeyEvent.VK_UP]) i = -1;
+		int k = 0, j = 0;
+		if (keys[KeyEvent.VK_UP]) k = -1;
 		else if (keys[KeyEvent.VK_RIGHT]) j = 1;
-		else if (keys[KeyEvent.VK_DOWN]) i = 1;
+		else if (keys[KeyEvent.VK_DOWN]) k = 1;
 		else if (keys[KeyEvent.VK_LEFT]) j = -1;
+		Blocks block = Places.getPlaces()[0].getBlock(Player.getX()+j, Player.getY()+k);
 		
-		Blocks block = Places.getPlaces()[0].getBlock(Player.getX()+j, Player.getY()+i);
-		if (block != Blocks.BARRIER && block != Blocks.SIGN 
-				&& block != Blocks.WATER && block != Blocks.DOOR) {
-			moveTimer.scheduleAtFixedRate(new TimerTask() {
-				int i = 0;
-				@Override
-				public void run() {
+		moveTimer.scheduleAtFixedRate(new TimerTask() {
+			int i = 0;
+			@Override
+			public void run() {
+				if (block != Blocks.BARRIER && block != Blocks.SIGN 
+						&& block != Blocks.WATER && block != Blocks.DOOR) {
 					if (direction == 0 && i < 43) map.setLocation(map.getX(), map.getY()+1);
 					else if (direction == 1 && i < 43) map.setLocation(map.getX()-1, map.getY());
 					else if (direction == 2 && i < 43) map.setLocation(map.getX(), map.getY()-1);
 					else if (direction == 3 && i < 43) map.setLocation(map.getX()+1, map.getY());
 					
-					if (i == 8) {
-						if (useLeftFoot) {
-							if (facing == 0) player.setIcon(Player.imageUP_L);
-							else if (facing == 1) player.setIcon(Player.imageRIGHT_L);
-							else if (facing == 2) player.setIcon(Player.imageDOWN_L);
-							else player.setIcon(Player.imageLEFT_L);
-							useLeftFoot = false;
-						}
-						else {
-							if (facing == 0) player.setIcon(Player.imageUP_R);
-							else if (facing == 1) player.setIcon(Player.imageRIGHT_R);
-							else if (facing == 2) player.setIcon(Player.imageDOWN_R);
-							else player.setIcon(Player.imageLEFT_R);
-							useLeftFoot = true;
-						}
+					if (i == 43) {
+						if (facing == 0) Player.setPosition(Player.getX(), Player.getY()-1);
+						else if (facing == 1) Player.setPosition(Player.getX()+1, Player.getY());
+						else if (facing == 2) Player.setPosition(Player.getX(), Player.getY()+1);
+						else Player.setPosition(Player.getX()-1, Player.getY());
 					}
-					else if (i == 43) {
-						if (facing == 0) {
-							player.setIcon(Player.imageUP);
-							Player.setPosition(Player.getX(), Player.getY()-1);
-						}
-						else if (facing == 1) {
-							player.setIcon(Player.imageRIGHT);
-							Player.setPosition(Player.getX()+1, Player.getY());
-						}
-						else if (facing == 2) {
-							player.setIcon(Player.imageDOWN);
-							Player.setPosition(Player.getX(), Player.getY()+1);
-						}
-						else {
-							player.setIcon(Player.imageLEFT);
-							Player.setPosition(Player.getX()-1, Player.getY());
-						}
-					}
-					
-					if (i == 55) {
-						moveTimer.cancel();
-						isMoving = false;
-						move();
-					}
-					i++;
 				}
-			}, 10, 3);
-		}
-		else isMoving = false;
+				
+				if (i == 8) {
+					if (useLeftFoot) {
+						if (facing == 0) player.setIcon(Player.imageUP_L);
+						else if (facing == 1) player.setIcon(Player.imageRIGHT_L);
+						else if (facing == 2) player.setIcon(Player.imageDOWN_L);
+						else player.setIcon(Player.imageLEFT_L);
+						useLeftFoot = false;
+					}
+					else {
+						if (facing == 0) player.setIcon(Player.imageUP_R);
+						else if (facing == 1) player.setIcon(Player.imageRIGHT_R);
+						else if (facing == 2) player.setIcon(Player.imageDOWN_R);
+						else player.setIcon(Player.imageLEFT_R);
+						useLeftFoot = true;
+					}
+				}
+				else if (i == 43) {
+					if (facing == 0) {
+						player.setIcon(Player.imageUP);
+					}
+					else if (facing == 1) {
+						player.setIcon(Player.imageRIGHT);
+					}
+					else if (facing == 2) {
+						player.setIcon(Player.imageDOWN);
+					}
+					else {
+						player.setIcon(Player.imageLEFT);
+					}
+				}
+				
+				if (i == 55) {
+					moveTimer.cancel();
+					isMoving = false;
+					move();
+				}
+				i++;
+			}
+		}, 10, 3);
 	}
 	
 	private void wait(int time) {

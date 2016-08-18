@@ -25,10 +25,20 @@ public class ImageFile extends ImageIcon {
 		setImage(scaleImage(getImage(), getIconWidth()*2+scale, getIconHeight()*2+scale));
 	}
 	
+	public void scale(int x, int y) {
+		setImage(scaleImage(getImage(), x, y));
+	}
+	
+	public ImageIcon scaleNewImage(int x, int y) {
+		Image img = getImage();
+		ImageIcon image = new ImageIcon();
+		image.setImage(scaleImage(img, x, y));
+		return image;
+	}
+	
 	private Image scaleImage(Image srcImg, int w, int h) {
 	    BufferedImage resizedImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
 	    Graphics2D g2 = resizedImg.createGraphics();
-
 	    g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 	    g2.drawImage(srcImg, 0, 0, w, h, null);
 	    g2.dispose();

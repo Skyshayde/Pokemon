@@ -45,34 +45,4 @@ public class ImageFile extends ImageIcon {
 
 	    return resizedImg;
 	}
-	
-	/*
-	private BufferedImage image;
-	private String location;
-	
-	public ImageFile(String location) {
-		this.location = location;
-	}
-
-    public void image() {  
-        try {
-            image = ImageIO.read(new File(location));
-        } catch (IOException e) { e.printStackTrace(); }
-    }
-    
-    protected void paintComponent(Graphics g) {
-        scale();
-        g.drawImage(image, 0, 0, null);
-        
-    }
-    
-    public void scale() {
-    	int w = image.getWidth();
-    	int h = image.getHeight();
-    	BufferedImage scaledImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-    	AffineTransform at = new AffineTransform();
-    	at.scale(2.0, 2.0);
-    	AffineTransformOp scaleOp = new AffineTransformOp(at, AffineTransformOp.TYPE_BILINEAR);
-    	image = scaleOp.filter(image, scaledImage);
-    }*/
 }

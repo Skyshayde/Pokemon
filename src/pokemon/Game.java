@@ -42,6 +42,7 @@ public class Game {
 	public void setGameFrame() {
 		gameFrame = new JFrame("Pokemon Jade");
 		gameFrame.setSize(640, 450);
+		gameFrame.setResizable(false);
 		gameFrame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
 		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(gameFrame.getGraphicsConfiguration());
@@ -78,7 +79,7 @@ public class Game {
 	
 	public void setStateMap() {
 		player = new JLabel(Player.imageUP);
-		player.setBounds(gamePanel.getWidth()/2-20, gamePanel.getHeight()/2-28, Player.imageUP.getIconWidth(), Player.imageUP.getIconHeight());
+		player.setBounds(gamePanel.getWidth()/2-20, gamePanel.getHeight()/2-34, Player.imageUP.getIconWidth(), Player.imageUP.getIconHeight());
 		gamePanel.add(player);
 		Player.setPosition(19, 21);
 		
@@ -213,14 +214,14 @@ public class Game {
 					}
 				}
 				
-				if (i == 55) {
+				if (i == 50) {
 					moveTimer.cancel();
 					isMoving = false;
 					move();
 				}
 				i++;
 			}
-		}, 10, 3);
+		}, 0, 3);
 	}
 	
 	private void wait(int time) {
@@ -235,7 +236,7 @@ public class Game {
 				}
 				i++;
 			}
-		}, 10, 5);
+		}, 0, 5);
 	}
 
 }

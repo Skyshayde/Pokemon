@@ -2,6 +2,11 @@ package pokemon;
 
 public class People {
 	private static Person[] people;
+	
+	public People() {
+		people = new Person[8]; //TODO
+		setPeople();
+	}
 
 	public static Person[] getPeople() {
 		return people;
@@ -9,7 +14,7 @@ public class People {
 	
 	public void setPeople() {
 		people[0] = new PersonQuest("Rachel", Player.getLastName(), "Mom", PeopleType.GENERIC, false, 1);
-			people[0].setLocation(Places.getBuildings()[0], 0, 0, 3, false, false); //TODO
+			//people[0].setLocation(Places.getBuildings()[0], 0, 0, 3, false, false); //TODO
 			people[0].setGenDialogue("Hello honey, how are you feeling? You should rest");
 			people[0].heals(true);
 		people[1] = new PersonQuest("Bruce", Player.getLastName(), "Dad", PeopleType.GENERIC, true, 2);

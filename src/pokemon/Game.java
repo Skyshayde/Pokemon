@@ -21,15 +21,11 @@ import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 public class Game {
+	private KeyAction keyListener;
 	private JFrame gameFrame;
 	private JPanel gamePanel;
 	private JLabel player;
 	private JLabel map;
-	private boolean isMoving;
-	private boolean useLeftFoot;
-	private int facing;
-	
-	private boolean[] keys;
 
 	public Game() {
 		new Player();
@@ -37,6 +33,9 @@ public class Game {
 		
 		setGameFrame();
 		setStateMap();
+		
+		keyListener = new KeyAction();
+		gameFrame.addKeyListener(keyListener);
 	}
 	
 	public void setGameFrame() {
@@ -79,74 +78,52 @@ public class Game {
 	
 	public void setStateMap() {
 		player = new JLabel(Player.imageUP);
-		player.setBounds(gamePanel.getWidth()/2-20, gamePanel.getHeight()/2-34, Player.imageUP.getIconWidth(), Player.imageUP.getIconHeight());
+		player.setBounds(gamePanel.getWidth()/2-25, gamePanel.getHeight()/2-34, Player.imageUP.getIconWidth(), Player.imageUP.getIconHeight());
 		gamePanel.add(player);
 		Player.setPosition(19, 21);
 		
 		map = new JLabel(Places.getMap(0));
 		map.setBounds(-527, -731, Places.getMap(0).getIconWidth(), Places.getMap(0).getIconHeight());
 		gamePanel.add(map);
-
-		keys = new boolean[41]; //TODO Hashmap?
-		Arrays.fill(keys, false);
-		gameFrame.addKeyListener(new KeyListener() {
-			@Override
-			public void keyPressed(KeyEvent ke) {
-				if (!(keys[KeyEvent.VK_UP] || keys[KeyEvent.VK_RIGHT] || 
-						keys[KeyEvent.VK_DOWN] || keys[KeyEvent.VK_LEFT])) {
-					keys[ke.getKeyCode()] = true;
-					move();
-				}
-				if (ke.getKeyCode() == KeyEvent.VK_SPACE) {
-					System.out.println(map.getX() + " " + map.getY());
-				}
-			}
-			@Override
-			public void keyReleased(KeyEvent ke) {
-				keys[ke.getKeyCode()] = false;
-			}
-			@Override
-			public void keyTyped(KeyEvent ke) {}
-		});
 	}
 	
 	private void move() {
-		if (keys[KeyEvent.VK_UP] && !isMoving) {
+		if (keyListener.keys[KeyEvent.VK_UP] && !keyListener.isMoving) {
 			if (!turn(map)) animateMapMove(map, 0);
 	    }
-		else if (keys[KeyEvent.VK_RIGHT] && !isMoving) {
+		else if (keyListener.keys[KeyEvent.VK_RIGHT] && !keyListener.isMoving) {
 			if (!turn(map)) animateMapMove(map, 1);
 	    }
-		else if (keys[KeyEvent.VK_DOWN] && !isMoving) {
+		else if (keyListener.keys[KeyEvent.VK_DOWN] && !keyListener.isMoving) {
 			if (!turn(map)) animateMapMove(map, 2);
 	    }
-		else if (keys[KeyEvent.VK_LEFT] && !isMoving) {
+		else if (keyListener.keys[KeyEvent.VK_LEFT] && !keyListener.isMoving) {
 			if (!turn(map)) animateMapMove(map, 3);
 	    }
 	}
 	
 	private boolean turn(JLabel map) {
-		if (keys[KeyEvent.VK_UP] && facing != 0) {
+		if (keyListener.keys[KeyEvent.VK_UP] && keyListener.facing != 0) {
 			player.setIcon(Player.imageUP);
-			facing = 0;
+			keyListener.facing = 0;
 			wait(20);
 			return true;
 	    }
-		else if (keys[KeyEvent.VK_RIGHT] && facing != 1) {
+		else if (keyListener.keys[KeyEvent.VK_RIGHT] && keyListener.facing != 1) {
 			player.setIcon(Player.imageRIGHT);
-			facing = 1;
+			keyListener.facing = 1;
 			wait(20);
 			return true;
 	    }
-		else if (keys[KeyEvent.VK_DOWN] && facing != 2) {
+		else if (keyListener.keys[KeyEvent.VK_DOWN] && keyListener.facing != 2) {
 			player.setIcon(Player.imageDOWN);
-			facing = 2;
+			keyListener.facing = 2;
 			wait(20);
 			return true;
 	    }
-		else if (keys[KeyEvent.VK_LEFT] && facing != 3) {
+		else if (keyListener.keys[KeyEvent.VK_LEFT] && keyListener.facing != 3) {
 			player.setIcon(Player.imageLEFT);
-			facing = 3;
+			keyListener.facing = 3;
 			wait(20);
 			return true;
 	    }
@@ -154,72 +131,111 @@ public class Game {
 	}
 	
 	private void animateMapMove(JLabel map, int direction) {
-		isMoving = true;
+		keyListener.isMoving = true;
 		Timer moveTimer = new Timer();
 		
 		int k = 0, j = 0;
-		if (keys[KeyEvent.VK_UP]) k = -1;
-		else if (keys[KeyEvent.VK_RIGHT]) j = 1;
-		else if (keys[KeyEvent.VK_DOWN]) k = 1;
-		else if (keys[KeyEvent.VK_LEFT]) j = -1;
+		if (keyListener.keys[KeyEvent.VK_UP]) k = -1;
+		else if (keyListener.keys[KeyEvent.VK_RIGHT]) j = 1;
+		else if (keyListener.keys[KeyEvent.VK_DOWN]) k = 1;
+		else if (keyListener.keys[KeyEvent.VK_LEFT]) j = -1;
 		Blocks block = Places.getPlaces()[0].getBlock(Player.getX()+j, Player.getY()+k);
 		
 		moveTimer.scheduleAtFixedRate(new TimerTask() {
+			int interval = 1;
 			int i = 0;
 			@Override
-			public void run() {
+			public void run() {System.out.println(keyListener.facing);
+				if (keyListener.running) {
+					if (i >= 42) interval = 1;
+					else interval = 2;
+				}
+				
 				if (block != Blocks.BARRIER && block != Blocks.SIGN 
 						&& block != Blocks.WATER && block != Blocks.DOOR) {
-					if (direction == 0 && i < 43) map.setLocation(map.getX(), map.getY()+1);
-					else if (direction == 1 && i < 43) map.setLocation(map.getX()-1, map.getY());
-					else if (direction == 2 && i < 43) map.setLocation(map.getX(), map.getY()-1);
-					else if (direction == 3 && i < 43) map.setLocation(map.getX()+1, map.getY());
+					if (direction == 0 && i < 43) map.setLocation(map.getX(), map.getY()+interval);
+					else if (direction == 1 && i < 43) map.setLocation(map.getX()-interval, map.getY());
+					else if (direction == 2 && i < 43) map.setLocation(map.getX(), map.getY()-interval);
+					else if (direction == 3 && i < 43) map.setLocation(map.getX()+interval, map.getY());
 					
 					if (i == 43) {
-						if (facing == 0) Player.setPosition(Player.getX(), Player.getY()-1);
-						else if (facing == 1) Player.setPosition(Player.getX()+1, Player.getY());
-						else if (facing == 2) Player.setPosition(Player.getX(), Player.getY()+1);
+						if (keyListener.facing == 0) Player.setPosition(Player.getX(), Player.getY()-1);
+						else if (keyListener.facing == 1) Player.setPosition(Player.getX()+1, Player.getY());
+						else if (keyListener.facing == 2) Player.setPosition(Player.getX(), Player.getY()+1);
 						else Player.setPosition(Player.getX()-1, Player.getY());
 					}
 				}
 				
 				if (i == 8) {
-					if (useLeftFoot) {
-						if (facing == 0) player.setIcon(Player.imageUP_L);
-						else if (facing == 1) player.setIcon(Player.imageRIGHT_L);
-						else if (facing == 2) player.setIcon(Player.imageDOWN_L);
-						else player.setIcon(Player.imageLEFT_L);
-						useLeftFoot = false;
+					if (keyListener.useLeftFoot) {
+						if (keyListener.facing == 0) {
+							if (keyListener.running) player.setIcon(Player.imageRunUP_L);
+							else player.setIcon(Player.imageUP_L);
+						}
+						else if (keyListener.facing == 1) {
+							if (keyListener.running) player.setIcon(Player.imageRunRIGHT_L);
+							else player.setIcon(Player.imageRIGHT_L);
+						}
+						else if (keyListener.facing == 2) {
+							if (keyListener.running) player.setIcon(Player.imageRunDOWN_L);
+							else player.setIcon(Player.imageDOWN_L);
+						}
+						else {
+							if (keyListener.running) player.setIcon(Player.imageRunLEFT_L);
+							else player.setIcon(Player.imageLEFT_L);
+						}
+						keyListener.useLeftFoot = false;
 					}
 					else {
-						if (facing == 0) player.setIcon(Player.imageUP_R);
-						else if (facing == 1) player.setIcon(Player.imageRIGHT_R);
-						else if (facing == 2) player.setIcon(Player.imageDOWN_R);
-						else player.setIcon(Player.imageLEFT_R);
-						useLeftFoot = true;
+						if (keyListener.facing == 0) {
+							if (keyListener.running) player.setIcon(Player.imageRunUP_R);
+							else player.setIcon(Player.imageUP_R);
+						}
+						else if (keyListener.facing == 1) {
+							if (keyListener.running) player.setIcon(Player.imageRunRIGHT_R);
+							else player.setIcon(Player.imageRIGHT_R);
+						}
+						else if (keyListener.facing == 2) {
+							if (keyListener.running) player.setIcon(Player.imageRunDOWN_R);
+							else player.setIcon(Player.imageDOWN_R);
+						}
+						else {
+							if (keyListener.running) player.setIcon(Player.imageRunLEFT_R);
+							else player.setIcon(Player.imageLEFT_R);
+						}
+						keyListener.useLeftFoot = true;
 					}
 				}
 				else if (i == 43) {
-					if (facing == 0) {
-						player.setIcon(Player.imageUP);
+					if (keyListener.facing == 0) {
+						if (keyListener.running) player.setIcon(Player.imageRunUP);
+						else player.setIcon(Player.imageUP);
 					}
-					else if (facing == 1) {
-						player.setIcon(Player.imageRIGHT);
+					else if (keyListener.facing == 1) {
+						if (keyListener.running) player.setIcon(Player.imageRunRIGHT);
+						else player.setIcon(Player.imageRIGHT);
 					}
-					else if (facing == 2) {
-						player.setIcon(Player.imageDOWN);
+					else if (keyListener.facing == 2) {
+						if (keyListener.running) player.setIcon(Player.imageRunDOWN);
+						else player.setIcon(Player.imageDOWN);
 					}
 					else {
-						player.setIcon(Player.imageLEFT);
+						if (keyListener.running) player.setIcon(Player.imageRunLEFT);
+						else player.setIcon(Player.imageLEFT);
 					}
 				}
 				
 				if (i == 50) {
 					moveTimer.cancel();
-					isMoving = false;
+					keyListener.isMoving = false;
 					move();
 				}
-				i++;
+				
+				if (keyListener.running) {
+					if (i >= 42) i++;
+					else i += 2;
+				}
+				else i++;
 			}
 		}, 0, 3);
 	}
@@ -237,6 +253,93 @@ public class Game {
 				i++;
 			}
 		}, 0, 5);
+	}
+	
+	private class KeyAction implements KeyListener {
+		private boolean isMoving;
+		private boolean running; //TODO Hashmap
+		private boolean useLeftFoot;
+		private int facing;
+		private boolean[] keys;
+		
+		public KeyAction() {
+			isMoving = false;
+			running = false;
+			useLeftFoot = false;
+			facing = 2; //South
+			keys = new boolean[41]; //TODO Hashmap?
+			Arrays.fill(keys, false);
+		}
+
+		@Override
+		public void keyPressed(KeyEvent ke) {
+			if (ke.getKeyCode() == KeyEvent.VK_X) {
+				running = true;
+				if (keyListener.facing == 0) player.setIcon(Player.imageRunUP);
+				else if (keyListener.facing == 1) player.setIcon(Player.imageRunRIGHT);
+				else if (keyListener.facing == 2) player.setIcon(Player.imageRunDOWN);
+				else player.setIcon(Player.imageRunLEFT);
+			}
+			
+			if (ke.getKeyCode() == KeyEvent.VK_UP || ke.getKeyCode() == KeyEvent.VK_RIGHT || 
+					ke.getKeyCode() == KeyEvent.VK_DOWN || ke.getKeyCode() == KeyEvent.VK_LEFT) {
+				if ((keys[KeyEvent.VK_UP] || keys[KeyEvent.VK_RIGHT] || 
+							keys[KeyEvent.VK_DOWN] || keys[KeyEvent.VK_LEFT])) {
+					if (ke.getKeyCode() == KeyEvent.VK_UP) {
+						keys[KeyEvent.VK_UP] = true;
+						keys[KeyEvent.VK_RIGHT] = false;
+						keys[KeyEvent.VK_DOWN] = false;
+						keys[KeyEvent.VK_LEFT] = false;
+						move();
+					}
+					else if (ke.getKeyCode() == KeyEvent.VK_RIGHT) {
+						keys[KeyEvent.VK_UP] = false;
+						keys[KeyEvent.VK_RIGHT] = true;
+						keys[KeyEvent.VK_DOWN] = false;
+						keys[KeyEvent.VK_LEFT] = false;
+						move();					
+					}
+					else if (ke.getKeyCode() == KeyEvent.VK_DOWN) {
+						keys[KeyEvent.VK_UP] = false;
+						keys[KeyEvent.VK_RIGHT] = false;
+						keys[KeyEvent.VK_DOWN] = true;
+						keys[KeyEvent.VK_LEFT] = false;
+						move();
+					}
+					else if (ke.getKeyCode() == KeyEvent.VK_LEFT) {
+						keys[KeyEvent.VK_UP] = false;
+						keys[KeyEvent.VK_RIGHT] = false;
+						keys[KeyEvent.VK_DOWN] = false;
+						keys[KeyEvent.VK_LEFT] = true;
+						move();
+					}
+				}
+				else {
+					keys[ke.getKeyCode()] = true;
+					move();
+				}
+			}
+		}
+		
+		@Override
+		public void keyReleased(KeyEvent ke) {
+			if (ke.getKeyCode() == KeyEvent.VK_X) {
+				running = false;
+				if (keyListener.facing == 0) player.setIcon(Player.imageUP);
+				else if (keyListener.facing == 1) player.setIcon(Player.imageRIGHT);
+				else if (keyListener.facing == 2) player.setIcon(Player.imageDOWN);
+				else player.setIcon(Player.imageLEFT);
+			}
+			
+			if (ke.getKeyCode() == KeyEvent.VK_UP || ke.getKeyCode() == KeyEvent.VK_RIGHT || 
+					ke.getKeyCode() == KeyEvent.VK_DOWN || ke.getKeyCode() == KeyEvent.VK_LEFT) {
+				keys[ke.getKeyCode()] = false;
+			}
+		}
+		
+		@Override
+		public void keyTyped(KeyEvent ke) {}
+		
 	}
 
 }

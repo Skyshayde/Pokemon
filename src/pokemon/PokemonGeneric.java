@@ -16,7 +16,7 @@ public class PokemonGeneric {
 
     public PokemonGeneric(String name, Element element, 
     		int rarityInt, String description, int id) {
-    	this.element = new Element[4];
+    	this.element = new Element[1];
     	movesNotAllowed = new Move[20];
     	setRarity(rarityInt);
     	
@@ -28,7 +28,12 @@ public class PokemonGeneric {
     }
     
     public void addElement(Element newElement) {
-    	element[element.length] = newElement;
+    	Element[] temp = new Element[element.length+1];
+    	for (int i = 0; i < element.length; i++) {
+    		temp[i] = element[i];
+    	}
+    	element = temp;
+    	element[element.length-1] = newElement;
     }
     
     public void addLevelMove(Move move, int level) {

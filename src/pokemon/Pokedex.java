@@ -4,15 +4,17 @@ public class Pokedex {
 	private static PokemonGeneric[] pokedex;
 	
 	public Pokedex() {
-		pokedex = new PokemonGeneric[7];//TODO
+		pokedex = new PokemonGeneric[32];//TODO
 		setPokemon();
 	}
 	
 	public static PokemonGeneric[] getPokemon() {
+		pokedex = new PokemonGeneric[32];
+		setPokemon();
 		return pokedex;
 	}
 	
-	public void setPokemon() {
+	private static void setPokemon() {
 		pokedex[0] = new PokemonGeneric("Bulbasaur", Element.GRASS, 5, "There is a plant seed on its back right from the day this Pokémon is born. The seed slowly grows larger.", 1);
 		pokedex[0].addElement(Element.POISON);
 			

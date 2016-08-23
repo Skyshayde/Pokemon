@@ -21,14 +21,11 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.KeyStroke;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerModel;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.WindowConstants;
-import javax.swing.plaf.basic.BasicScrollBarUI;
 
 import pokemon.ImageFile;
 
@@ -36,7 +33,7 @@ public class Editor extends JFrame {
 	private static final long serialVersionUID = -2073445832146296219L;
 	private RadioButton[] mapItems;
 	private JPanel mainPanel, worldWindow, imageBar;
-	private JScrollPane scrollbar;
+	private ScrollPane scrollbar;
 	private JButton[] img;
 	private ImageFile currentImage;
 	private int gridSize;
@@ -48,14 +45,15 @@ public class Editor extends JFrame {
 		setSize(892, 625);
 		setResizable(false);
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
-		setLocation((scrSize.width - getWidth())/2, 
-				(scrSize.height - toolHeight.bottom - getHeight())/2);
 		
 		gridSize = 15; //default
 		setComponenets();
 		setMenuBar();
+
+		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+		setLocation((scrSize.width - getWidth())/2, 
+				(scrSize.height - toolHeight.bottom - getHeight())/2);
 	}
 	
 	public void setComponenets() {
@@ -181,34 +179,8 @@ public class Editor extends JFrame {
 			img[i].add(l);
 			imageBar.add(img[i]);
 		}
-		scrollbar = new JScrollPane(imageBar);
-		scrollbar.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollbar.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		scrollbar = new ScrollPane(imageBar);
 		scrollbar.setBounds(getWidth()-82, 5, 72, getHeight()-62);
-		scrollbar.setBorder(BorderFactory.createLineBorder(Color.black, 2));
-		scrollbar.getVerticalScrollBar().setUI(new BasicScrollBarUI() {   
-	        @Override
-	        protected JButton createDecreaseButton(int orientation) {
-	        	JButton button = super.createDecreaseButton(orientation);
-	        	button.setBackground(Color.white);
-	        	return button;
-	        }
-	        @Override    
-	        protected JButton createIncreaseButton(int orientation) {
-	        	JButton button = super.createIncreaseButton(orientation);
-	        	button.setBackground(Color.white);
-	        	return button;
-	        }
-	        @Override 
-	        protected void configureScrollBarColors() {
-	        	super.configureScrollBarColors();
-	        	trackColor = new Color(229, 229, 229);
-	        	thumbDarkShadowColor = new Color(120, 120, 120);
-	        	thumbLightShadowColor = new Color(180, 180, 180);
-	        	thumbHighlightColor = new Color(249, 249, 249);
-	        	thumbColor = new Color(209, 209, 209);
-	        }
-	    });
 		mainPanel.add(scrollbar);
 	}
 	
@@ -281,6 +253,11 @@ public class Editor extends JFrame {
 		int oldWidth = worldWindow.getWidth();
 		worldWindow.setSize(shiftY+2*yspace+2, worldWindow.getHeight());
 		setSize(getWidth()-(oldWidth-worldWindow.getWidth()), 625);
+
+		Dimension scrSize = Toolkit.getDefaultToolkit().getScreenSize();
+		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(getGraphicsConfiguration());
+		setLocation((scrSize.width - getWidth())/2, 
+				(scrSize.height - toolHeight.bottom - getHeight())/2);
 		repaint();
 	}
 	
@@ -375,7 +352,7 @@ public class Editor extends JFrame {
 		Map_Pokemon.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				//TODO
+				new WildPokemonEditor();
 			}
 		});
 		mapMenu.add(Map_Pokemon);

@@ -31,6 +31,8 @@ import pokemon.ImageFile;
 
 public class Editor extends JFrame {
 	private static final long serialVersionUID = -2073445832146296219L;
+	private Files files;
+	private ImageMap imageMap;
 	private RadioButton[] mapItems;
 	private JPanel mainPanel, worldWindow, imageBar;
 	private ScrollPane scrollbar;
@@ -47,6 +49,8 @@ public class Editor extends JFrame {
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		
 		gridSize = 15; //default
+		imageMap = new ImageMap();
+		files = new Files(gridSize, imageMap); //TODO finish
 		setComponenets();
 		setMenuBar();
 
@@ -138,7 +142,7 @@ public class Editor extends JFrame {
 				else borderX = 0;
 				if (i == 0) borderY = 2;
 				else borderY = 0;
-				gridBlocks[gridSize*i+j] = new GridBlock(j, i, this);
+				gridBlocks[gridSize*i+j] = new GridBlock(j, i, files, this);
 				gridBlocks[gridSize*i+j].setBounds(yspace+borderX+shiftX, yspace+borderY+shiftY, size, size);
 				shiftX = gridBlocks[gridSize*i+j].getX() + gridBlocks[gridSize*i+j].getWidth()-yspace;
 				worldWindow.add(gridBlocks[gridSize*i+j]);
@@ -199,6 +203,8 @@ public class Editor extends JFrame {
 				public void actionPerformed(ActionEvent e) {
 					updateImagesColor();
 					currentImage = mapItems[selectedItem].getImage(i);
+					GridBlock.imageID = i;
+					GridBlock.block = imageMap.getImageBlock(i);
 					img[i].setBackground(new Color(255, 140, 30));
 				}
 			});
@@ -240,7 +246,7 @@ public class Editor extends JFrame {
 				else borderX = 0;
 				if (i == 0) borderY = 2;
 				else borderY = 0;
-				gridBlocks[gridSize*i+j] = new GridBlock(j, i, this);
+				gridBlocks[gridSize*i+j] = new GridBlock(j, i, files, this);
 				gridBlocks[gridSize*i+j].setBounds(yspace+borderX+shiftX, yspace+borderY+shiftY, size, size);
 				shiftX = gridBlocks[gridSize*i+j].getX() + gridBlocks[gridSize*i+j].getWidth()-yspace;
 				worldWindow.add(gridBlocks[gridSize*i+j]);

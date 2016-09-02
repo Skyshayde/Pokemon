@@ -16,6 +16,7 @@ import pokemon.ImageFile;
 
 public class RadioButton extends JRadioButton implements ActionListener {
 	private static final long serialVersionUID = 6310508175185532093L;
+	private ImageMap imgMap;
 	private Blocks block;
 	private Editor editor;
 	private int id;
@@ -24,9 +25,9 @@ public class RadioButton extends JRadioButton implements ActionListener {
 
 	public RadioButton(String text) {
 		super(text);
+		imgMap = new ImageMap();
 		setIcon(new ColorIcon());
 		addActionListener(this);
-		images = new ImageFile[0];
 	}
 	
 	public void setID(int code) {
@@ -73,20 +74,7 @@ public class RadioButton extends JRadioButton implements ActionListener {
 	public void setImages(int code) {
 		switch (code) {
 			case 0: 
-				images = new ImageFile[13];
-				images[0] = new ImageFile(getClass().getResource("/mapImages/Standard/grass.png"));
-				images[1] = new ImageFile(getClass().getResource("/mapImages/Standard/grass-forest.png"));
-				images[2] = new ImageFile(getClass().getResource("/mapImages/Standard/grass-patch.png"));
-				images[3] = new ImageFile(getClass().getResource("/mapImages/Standard/grass-sand patch.png"));
-				images[4] = new ImageFile(getClass().getResource("/mapImages/Standard/ground-stone panel grass left.png"));
-				images[5] = new ImageFile(getClass().getResource("/mapImages/Standard/ground-stone panel left.png"));
-				images[6] = new ImageFile(getClass().getResource("/mapImages/Standard/ground-stone walkway.png"));
-				images[7] = new ImageFile(getClass().getResource("/mapImages/Standard/ground-stone.png"));
-				images[8] = new ImageFile(getClass().getResource("/mapImages/Standard/sand.png"));
-				images[9] = new ImageFile(getClass().getResource("/mapImages/Standard/sand.png"));
-				images[10] = new ImageFile(getClass().getResource("/mapImages/Standard/sand.png"));
-				images[11] = new ImageFile(getClass().getResource("/mapImages/Standard/sand.png"));
-				images[12] = new ImageFile(getClass().getResource("/mapImages/Standard/sand.png"));
+				for (int i = 0; i < 9; i++) images[i] = imgMap.getImages()[i];
 				break;
 			case 1: 
 				
@@ -160,7 +148,10 @@ public class RadioButton extends JRadioButton implements ActionListener {
 		}
 	}
 	
-	public ImageFile getImage(int i) { return images[i]; }
+	public ImageFile getImage(int i) { 
+		if (i < images.length) return images[i]; 
+		return null;
+	}
 	
 	public int getNumImages() { return images.length; }
 

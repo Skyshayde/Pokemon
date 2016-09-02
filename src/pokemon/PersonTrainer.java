@@ -11,6 +11,7 @@ public class PersonTrainer extends Person {
 	public PersonTrainer(String firstName, String lastName, String displayName, 
 			PeopleType type, boolean gender, int id) {
 		super(firstName, lastName, displayName, type, gender, id);
+		super.setClassID('T');
 		pokemonParty = new Pokemon[6];
 		items = new Item[20]; //Sets max items per trainer to 20
 		itemSize = 0;

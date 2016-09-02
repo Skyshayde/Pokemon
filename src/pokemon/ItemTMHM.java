@@ -5,8 +5,8 @@ public class ItemTMHM extends Item {
 	private Move move;
 	private ImageFile image;
 	
-	public ItemTMHM(String name, Move move, ItemType type, int price, int sell, String description) {
-		super(name, type, price, sell, move.getDescription());
+	public ItemTMHM(int id, String name, Move move, ItemType type, int price, int sell, String description) {
+		super(id, name, type, price, sell, move.getDescription());
 		this.move = move;
 		this.type = type;
 	}

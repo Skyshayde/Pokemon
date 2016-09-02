@@ -9,18 +9,25 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
+import pokemon.Blocks;
 import pokemon.ImageFile;
 
 public class GridBlock extends JButton implements MouseListener {
 	private static final long serialVersionUID = 2975640342661236922L;
 	private Editor editor;
+	private Files files;
+	static int imageID;
+	static Blocks block;
 	private int x, y;
 	private boolean activate;
 	
-	public GridBlock(int x, int y, Editor editor) {
+	public GridBlock(int x, int y, Files files, Editor editor) {
 		this.editor = editor;
+		this.files = files;
 		this.x = x;
 		this.y = y;
+		imageID = 0;
+		block = Blocks.BARRIER;
 		setFocusable(false);
 		setBorder(BorderFactory.createLineBorder(Color.gray));
 		setLayout(null);
@@ -56,6 +63,7 @@ public class GridBlock extends JButton implements MouseListener {
 				setBorder(null);
 				ImageIcon icon = image.scaleNewImage(getWidth(), getHeight());
 				setIcon(icon);
+				files.setGrid(x, y, block, imageID);;
 			}
 		}
 	}

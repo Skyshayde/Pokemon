@@ -11,8 +11,8 @@ public class ItemBerries extends Item {
 	private int change;
 	private ImageFile image;
 
-	public ItemBerries(String name, String description) {
-		super(name, ItemType.BERRY, 0, 0, description); //TODO price and sell???
+	public ItemBerries(int id, String name, String description) {
+		super(id, name, ItemType.BERRY, 0, 0, description); //TODO price and sell???
 		effect = new boolean[10];
 		resetEffect();
 	}

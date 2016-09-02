@@ -16,8 +16,8 @@ public class ItemMain extends Item {
 	private boolean increase;
 	private boolean isHold;
 	
-	public ItemMain(String name, int price, int sell, String description) {
-		super(name, ItemType.MAIN, price, sell, description);
+	public ItemMain(int id, String name, int price, int sell, String description) {
+		super(id, name, ItemType.MAIN, price, sell, description);
 		// TODO Auto-generated constructor stub
 	}
 	

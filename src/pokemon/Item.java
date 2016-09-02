@@ -1,6 +1,7 @@
 package pokemon;
 
 public class Item {
+	private int id;
 	private String name;
 	private ItemType type;
 	private int price;
@@ -8,7 +9,8 @@ public class Item {
 	private String description;
 	private Place location;
 	
-	public Item(String name, ItemType type, int price, int sell, String description) {
+	public Item(int id, String name, ItemType type, int price, int sell, String description) {
+		this.id = id;
 		this.name = name;
 		this.type = type;
 		this.price = price;
@@ -18,6 +20,10 @@ public class Item {
 	
 	public String getDescription() {
 		return description;
+	}
+	
+	public int getID() {
+		return id;
 	}
 	
 	public ItemType getItemType() {

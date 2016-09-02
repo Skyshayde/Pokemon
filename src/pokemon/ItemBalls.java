@@ -12,8 +12,8 @@ public class ItemBalls extends Item {
 	private int catchRate;
 	private ImageFile image;
 	
-	public ItemBalls(String name, int price, int sell, String description, int ballType) {
-		super(name, ItemType.BALL, price, sell, description);
+	public ItemBalls(int id, String name, int price, int sell, String description, int ballType) {
+		super(id, name, ItemType.BALL, price, sell, description);
 		setBall(ballType);
 	}
 	

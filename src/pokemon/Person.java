@@ -18,6 +18,7 @@ public class Person {
 	private int[][] walkingCoordinates;
 	private String genericDialogue;
 	private boolean heals;
+	private char classID;
 	
 	public Person(String firstName, String lastName, String displayName, 
 			PeopleType type, boolean gender, int id) {
@@ -28,6 +29,7 @@ public class Person {
 		this.gender = gender;
 		this.id = id;
 		money = 0;
+		classID = 'P';
 	}
 	
 	public void addMoney(int money) { this.money += money; }
@@ -39,13 +41,16 @@ public class Person {
 	public String getDisplayName() { return displayName; }
 	
 	public int getFacingDirection() { return facing; }
-	
+
+	public String getFirstName() { return firstName; }
+	public String getLastName() { return lastName; }	
 	public String getFullName() { return firstName + " " + lastName; }
 	
 	public String getGender() {
 		if (gender) return "Male";
 		return "Female";
 	}
+	public boolean isMale() { return gender; }
 	
 	public String getGenDialogue() { return genericDialogue; }
 	
@@ -96,5 +101,8 @@ public class Person {
 	public void setWalkingCoordinates(int[][] pos) {
 		walkingCoordinates = pos; //TODO better way?
 	}
+	
+	public void setClassID(char id) { classID = id; }
+	public char getClassID() { return classID; }
 	
 }

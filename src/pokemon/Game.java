@@ -13,19 +13,23 @@ import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JLayeredPane;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
 public class Game {
+	private Game game = this;
 	private KeyAction keyListener;
-	private JFrame gameFrame;
-	private JPanel gamePanel;
 	private JLabel player;
 	private JLabel map;
+	
+	JFrame gameFrame;
+	JLayeredPane gameLayer;
+	GUIMenu menu;
+	boolean menuOpen;
 
 	public Game() {
 		new Player();
@@ -36,6 +40,7 @@ public class Game {
 		
 		keyListener = new KeyAction();
 		gameFrame.addKeyListener(keyListener);
+		menuOpen = false;
 	}
 	
 	public void setGameFrame() {
@@ -47,11 +52,8 @@ public class Game {
 		Insets toolHeight = Toolkit.getDefaultToolkit().getScreenInsets(gameFrame.getGraphicsConfiguration());
 		gameFrame.setLocation((scrSize.width - gameFrame.getWidth())/2, 
 				(scrSize.height - toolHeight.bottom - gameFrame.getHeight())/2);
-		
-		gamePanel = new JPanel();
-		gamePanel.setLayout(null);
-		gamePanel.setSize(gameFrame.getWidth(), gameFrame.getHeight());
-		gameFrame.add(gamePanel);
+
+		gameLayer = gameFrame.getLayeredPane();
 		
 		setMenuBar();
 		gameFrame.setVisible(true);
@@ -76,16 +78,18 @@ public class Game {
 		fileMenu.add(menuItem);
 	}
 	
-	public void setStateMap() {
-		player = new JLabel(Player.imageUP);
-		player.setBounds(gamePanel.getWidth()/2-25, gamePanel.getHeight()/2-34, Player.imageUP.getIconWidth(), Player.imageUP.getIconHeight());
-		gamePanel.add(player);
-		Player.setPosition(19, 21);
-		
+	public void setStateMap() {		
 		map = new JLabel(Places.getMap(0));
 		map.setBounds(-527, -731, Places.getMap(0).getIconWidth(), Places.getMap(0).getIconHeight());
-		gamePanel.add(map);
+		gameLayer.add(map, new Integer(0));
+
+		player = new JLabel(Player.imageUP);
+		player.setBounds(gameLayer.getWidth()/2-25, gameLayer.getHeight()/2-44, Player.imageUP.getIconWidth(), Player.imageUP.getIconHeight());
+		gameLayer.add(player, new Integer(2));
+		Player.setPosition(19, 21);
 	}
+	
+	public void setMenuClosed() { menuOpen = false; }
 	
 	private void move() {
 		if (keyListener.keys[KeyEvent.VK_UP] && !keyListener.isMoving) {
@@ -273,7 +277,7 @@ public class Game {
 
 		@Override
 		public void keyPressed(KeyEvent ke) {
-			if (ke.getKeyCode() == KeyEvent.VK_X) {
+			if (ke.getKeyCode() == KeyEvent.VK_X && !menuOpen) {
 				running = true;
 				if (keyListener.facing == 0) player.setIcon(Player.imageRunUP);
 				else if (keyListener.facing == 1) player.setIcon(Player.imageRunRIGHT);
@@ -281,8 +285,9 @@ public class Game {
 				else player.setIcon(Player.imageRunLEFT);
 			}
 			
-			if (ke.getKeyCode() == KeyEvent.VK_UP || ke.getKeyCode() == KeyEvent.VK_RIGHT || 
-					ke.getKeyCode() == KeyEvent.VK_DOWN || ke.getKeyCode() == KeyEvent.VK_LEFT) {
+			if ((ke.getKeyCode() == KeyEvent.VK_UP || ke.getKeyCode() == KeyEvent.VK_RIGHT || 
+					ke.getKeyCode() == KeyEvent.VK_DOWN || ke.getKeyCode() == KeyEvent.VK_LEFT)
+					&& !menuOpen) {
 				if ((keys[KeyEvent.VK_UP] || keys[KeyEvent.VK_RIGHT] || 
 							keys[KeyEvent.VK_DOWN] || keys[KeyEvent.VK_LEFT])) {
 					if (ke.getKeyCode() == KeyEvent.VK_UP) {
@@ -319,11 +324,21 @@ public class Game {
 					move();
 				}
 			}
+			
+			if (!menuOpen && ke.getKeyCode() == KeyEvent.VK_ENTER) {
+				menu = new GUIMenu(game);
+				menu.setBounds(0, 0, gameLayer.getWidth(), gameLayer.getHeight());
+				menu.setIcons(7);  //TODO change later
+				gameFrame.addKeyListener(menu);
+				gameFrame.setFocusable(true);
+				gameLayer.add(menu, new Integer(5));
+				menuOpen = true;
+			}
 		}
 		
 		@Override
 		public void keyReleased(KeyEvent ke) {
-			if (ke.getKeyCode() == KeyEvent.VK_X) {
+			if (ke.getKeyCode() == KeyEvent.VK_X && !menuOpen) {
 				running = false;
 				if (keyListener.facing == 0) player.setIcon(Player.imageUP);
 				else if (keyListener.facing == 1) player.setIcon(Player.imageRIGHT);
@@ -331,8 +346,9 @@ public class Game {
 				else player.setIcon(Player.imageLEFT);
 			}
 			
-			if (ke.getKeyCode() == KeyEvent.VK_UP || ke.getKeyCode() == KeyEvent.VK_RIGHT || 
-					ke.getKeyCode() == KeyEvent.VK_DOWN || ke.getKeyCode() == KeyEvent.VK_LEFT) {
+			if ((ke.getKeyCode() == KeyEvent.VK_UP || ke.getKeyCode() == KeyEvent.VK_RIGHT || 
+					ke.getKeyCode() == KeyEvent.VK_DOWN || ke.getKeyCode() == KeyEvent.VK_LEFT)
+					&& !menuOpen) {
 				keys[ke.getKeyCode()] = false;
 			}
 		}

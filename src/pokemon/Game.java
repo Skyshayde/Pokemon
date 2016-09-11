@@ -11,6 +11,7 @@ import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JApplet;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JLayeredPane;
@@ -20,18 +21,22 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import javax.swing.WindowConstants;
 
-public class Game {
+@SuppressWarnings("serial")
+public class Game extends JApplet {
 	private Game game = this;
 	private KeyAction keyListener;
 	private JLabel player;
-	private JLabel map;
+	private JLabel map, mapLayer, mapObjects;
+	private boolean soundNotPlaying;
 	
 	JFrame gameFrame;
 	JLayeredPane gameLayer;
 	GUIMenu menu;
+	TextBox box;
 	boolean menuOpen;
 
 	public Game() {
+		init();
 		new Player();
 		new Places();
 		
@@ -41,6 +46,11 @@ public class Game {
 		keyListener = new KeyAction();
 		gameFrame.addKeyListener(keyListener);
 		menuOpen = false;
+		
+		add(gameLayer);
+		addKeyListener(keyListener);
+		setSize(640, 450);
+		setFocusable(true);
 	}
 	
 	public void setGameFrame() {
@@ -56,7 +66,7 @@ public class Game {
 		gameLayer = gameFrame.getLayeredPane();
 		
 		setMenuBar();
-		gameFrame.setVisible(true);
+		//gameFrame.setVisible(true);
 	}
 	
 	public void setMenuBar() {
@@ -78,13 +88,24 @@ public class Game {
 		fileMenu.add(menuItem);
 	}
 	
-	public void setStateMap() {		
-		map = new JLabel(Places.getMap(0));
-		map.setBounds(-527, -731, Places.getMap(0).getIconWidth(), Places.getMap(0).getIconHeight());
+	public void setStateMap() {
+		map = Places.createMap(0);
 		gameLayer.add(map, new Integer(0));
-
+		mapLayer = Places.getLayerMap();
+		gameLayer.add(mapLayer, new Integer(3));
+		mapObjects = Places.getObjectsMap();
+		gameLayer.add(mapObjects, new Integer(1));
+		objectTimer(true);
+		
+		soundNotPlaying = true;
+		
 		player = new JLabel(Player.imageUP);
-		player.setBounds(gameLayer.getWidth()/2-25, gameLayer.getHeight()/2-44, Player.imageUP.getIconWidth(), Player.imageUP.getIconHeight());
+		/*player.setBounds(gameLayer.getWidth()/2-26, gameLayer.getHeight()/2-50, 
+				Player.imageUP.getIconWidth(), Player.imageUP.getIconHeight()); TODO for applet */
+		
+		player.setBounds(640/2-28, 450/2-64, 
+				Player.imageUP.getIconWidth(), Player.imageUP.getIconHeight());
+		System.out.println(map.getY());
 		gameLayer.add(player, new Integer(2));
 		Player.setPosition(19, 21);
 	}
@@ -93,20 +114,20 @@ public class Game {
 	
 	private void move() {
 		if (keyListener.keys[KeyEvent.VK_UP] && !keyListener.isMoving) {
-			if (!turn(map)) animateMapMove(map, 0);
+			if (!turn()) animateMapMove(0);
 	    }
 		else if (keyListener.keys[KeyEvent.VK_RIGHT] && !keyListener.isMoving) {
-			if (!turn(map)) animateMapMove(map, 1);
+			if (!turn()) animateMapMove(1);
 	    }
 		else if (keyListener.keys[KeyEvent.VK_DOWN] && !keyListener.isMoving) {
-			if (!turn(map)) animateMapMove(map, 2);
+			if (!turn()) animateMapMove(2);
 	    }
 		else if (keyListener.keys[KeyEvent.VK_LEFT] && !keyListener.isMoving) {
-			if (!turn(map)) animateMapMove(map, 3);
+			if (!turn()) animateMapMove(3);
 	    }
 	}
 	
-	private boolean turn(JLabel map) {
+	private boolean turn() {
 		if (keyListener.keys[KeyEvent.VK_UP] && keyListener.facing != 0) {
 			player.setIcon(Player.imageUP);
 			keyListener.facing = 0;
@@ -134,7 +155,7 @@ public class Game {
 		return false;
 	}
 	
-	private void animateMapMove(JLabel map, int direction) {
+	private void animateMapMove(int direction) {
 		keyListener.isMoving = true;
 		Timer moveTimer = new Timer();
 		
@@ -149,18 +170,34 @@ public class Game {
 			int interval = 1;
 			int i = 0;
 			@Override
-			public void run() {System.out.println(keyListener.facing);
+			public void run() {
 				if (keyListener.running) {
 					if (i >= 42) interval = 1;
 					else interval = 2;
 				}
 				
-				if (block != Blocks.BARRIER && block != Blocks.SIGN 
+				if (block != Blocks.BARRIER && block != Blocks.SIGNBARRIER
 						&& block != Blocks.WATER && block != Blocks.DOOR) {
-					if (direction == 0 && i < 43) map.setLocation(map.getX(), map.getY()+interval);
-					else if (direction == 1 && i < 43) map.setLocation(map.getX()-interval, map.getY());
-					else if (direction == 2 && i < 43) map.setLocation(map.getX(), map.getY()-interval);
-					else if (direction == 3 && i < 43) map.setLocation(map.getX()+interval, map.getY());
+					if (direction == 0 && i < 43) {
+						map.setLocation(map.getX(), map.getY()+interval);
+						mapLayer.setLocation(mapLayer.getX(), mapLayer.getY()+interval);
+						mapObjects.setLocation(mapObjects.getX(), mapObjects.getY()+interval);
+					}
+					else if (direction == 1 && i < 43) {
+						map.setLocation(map.getX()-interval, map.getY());
+						mapLayer.setLocation(mapLayer.getX()-interval, mapLayer.getY());
+						mapObjects.setLocation(mapObjects.getX()-interval, mapObjects.getY());
+					}
+					else if (direction == 2 && i < 43) {
+						map.setLocation(map.getX(), map.getY()-interval);
+						mapLayer.setLocation(mapLayer.getX(), mapLayer.getY()-interval);
+						mapObjects.setLocation(mapObjects.getX(), mapObjects.getY()-interval);
+					}
+					else if (direction == 3 && i < 43) {
+						map.setLocation(map.getX()+interval, map.getY());
+						mapLayer.setLocation(mapLayer.getX()+interval, mapLayer.getY());
+						mapObjects.setLocation(mapObjects.getX()+interval, mapObjects.getY());
+					}
 					
 					if (i == 43) {
 						if (keyListener.facing == 0) Player.setPosition(Player.getX(), Player.getY()-1);
@@ -241,7 +278,7 @@ public class Game {
 				}
 				else i++;
 			}
-		}, 0, 3);
+		}, 0, 5);
 	}
 	
 	private void wait(int time) {
@@ -257,6 +294,34 @@ public class Game {
 				i++;
 			}
 		}, 0, 5);
+	}
+	
+	private void objectTimer(boolean on) {
+		Timer timer = new Timer();
+		timer.scheduleAtFixedRate(new TimerTask() {
+			int pos, i = 0;
+			@Override
+			public void run() {
+				if (pos == 0 || pos == 5) mapObjects.setLocation(mapObjects.getX()-1, mapObjects.getY());
+				else if (pos == 2 || pos == 3) mapObjects.setLocation(mapObjects.getX()+1, mapObjects.getY());
+				pos++;
+				if (pos > 5) pos = 0;
+				
+				if (!soundNotPlaying && i < 2) i++;
+				else {
+					soundNotPlaying = true;
+					i = 0;
+				}
+				
+				if (!on) {
+					timer.cancel();
+				}
+			}
+		}, 0, 200);
+	}
+	
+	public void addListener() {
+		gameFrame.addKeyListener(keyListener);
 	}
 	
 	private class KeyAction implements KeyListener {
@@ -279,10 +344,6 @@ public class Game {
 		public void keyPressed(KeyEvent ke) {
 			if (ke.getKeyCode() == KeyEvent.VK_X && !menuOpen) {
 				running = true;
-				if (keyListener.facing == 0) player.setIcon(Player.imageRunUP);
-				else if (keyListener.facing == 1) player.setIcon(Player.imageRunRIGHT);
-				else if (keyListener.facing == 2) player.setIcon(Player.imageRunDOWN);
-				else player.setIcon(Player.imageRunLEFT);
 			}
 			
 			if ((ke.getKeyCode() == KeyEvent.VK_UP || ke.getKeyCode() == KeyEvent.VK_RIGHT || 
@@ -333,6 +394,45 @@ public class Game {
 				gameFrame.setFocusable(true);
 				gameLayer.add(menu, new Integer(5));
 				menuOpen = true;
+				
+				//TODO
+				addKeyListener(menu);
+				setFocusable(true);
+			}
+			//TODO special case for ridge
+			if ((facing == 0 && Places.getPlaces()[0].isBarrier(Player.getX(), Player.getY()-1)) ||
+					(facing == 1 && Places.getPlaces()[0].isBarrier(Player.getX()+1, Player.getY())) ||
+					(facing == 2 && Places.getPlaces()[0].isBarrier(Player.getX(), Player.getY()+1)) ||
+					(facing == 3 && Places.getPlaces()[0].isBarrier(Player.getX()-1, Player.getY()))) {
+				if (soundNotPlaying) {
+					Song barrierSound = new Song("/sounds/cannot walk there.wav");
+					barrierSound.play();
+					soundNotPlaying = false;
+				}
+			}
+			
+			if (ke.getKeyCode() == KeyEvent.VK_Z) { //TODO focus around coordinates than blocks
+				if ((facing == 0 && Places.getPlaces()[0].getBlock(
+						Player.getX(), Player.getY()-1) == Blocks.SIGNBARRIER) ||
+						(facing == 1 && Places.getPlaces()[0].getBlock(
+						Player.getX()+1, Player.getY()) == Blocks.SIGNBARRIER) ||
+						(facing == 2 && Places.getPlaces()[0].getBlock(
+						Player.getX(), Player.getY()+1) == Blocks.SIGNBARRIER) || 
+						(facing == 3 && Places.getPlaces()[0].getBlock(
+						Player.getX()-1, Player.getY()) == Blocks.SIGNBARRIER)) {
+					box = new TextBox(game, "Welcome to Ambler Johnstown!");
+					box.setBounds(0, 0, gameLayer.getWidth(), gameLayer.getHeight());
+					gameFrame.addKeyListener(box);
+					gameFrame.setFocusable(true);
+					gameLayer.add(box, new Integer(5));
+					gameFrame.removeKeyListener(keyListener);
+					menuOpen = true;
+					
+					//TODO
+					addKeyListener(box);
+					setFocusable(true);
+					removeKeyListener(keyListener);
+				}
 			}
 		}
 		

@@ -66,7 +66,7 @@ public class Game extends JApplet {
 		gameLayer = gameFrame.getLayeredPane();
 		
 		setMenuBar();
-		//gameFrame.setVisible(true);
+		gameFrame.setVisible(true);
 	}
 	
 	public void setMenuBar() {

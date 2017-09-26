@@ -290,7 +290,7 @@ public class Pokemon extends PokemonGeneric {
 		}
 	}
 
-    public void setStatus(Status stat) { //TODO
+    public void setStatus(Status stat) { //TODO do status calculations in Battle
     	status = stat;
     	switch (stat) {
 	    	case POISONED:
